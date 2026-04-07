@@ -1,9 +1,8 @@
-plateau = [[".", ".", "."], [".", ".", "."], [".", ".", "."]]
-
 def affiche():
-	""" 
+	"""
 		Affiche le plateau de jeu dans la console de manière lisible
 	"""
+	plateau = [[".", ".", "."], [".", ".", "."], [".", ".", "."]]
 	print("\t \t", "  0 1 2")
 	for j in range(len(plateau)):
 		print("\t \t", j, end=" ")
