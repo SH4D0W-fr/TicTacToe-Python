@@ -1,19 +1,22 @@
+plateau = [[".", ".", "."], [".", ".", "."], [".", ".", "."]]
+
 def affiche():
     """
-    Affiche le plateau avec coordonnées (A B C en haut, 1 2 3 à gauche)
+    Retourne le plateau avec coordonnées (A B C en haut, 1 2 3 à gauche)
     Code fourni modifié pour l'adapter à notre disposition
     """
-    plateau = [[".", ".", "."], [".", ".", "."], [".", ".", "."]]
-
-    # En-tête colonnes
-    print("\t \t  A B C")
-
-    # Affichage du plateau
+    
+    # En tête du plateau
+    output = "\t \t  A B C\n"
+    
+    # Plateau avec coordonnées
     for j in range(len(plateau)):
-        print("\t \t", j + 1, end=" ")
+        output += f"\t \t {j + 1} "
         for i in range(len(plateau[j])):
-            print(plateau[j][i], end=" ")
-        print()
+            output += plateau[j][i] + " "
+        output += "\n"
+    
+    return output, plateau
 
 def game_type_choice():
     """
@@ -39,4 +42,14 @@ def point_checker(pos:str) -> bool:
     for v in valid:
         if pos == v:
              return True
+    return False
+
+def point_setter(pos:str, symbol:str) -> bool:
+    """
+        Fonction qui permet de placer un point sur la position souhaitée
+    """
+    if point_checker(pos):
+        if plateau[int(pos[1]) - 1][ord(pos[0]) - ord("A")] == ".":
+            plateau[int(pos[1]) - 1][ord(pos[0]) - ord("A")] = symbol
+            return True
     return False
