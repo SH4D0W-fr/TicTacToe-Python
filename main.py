@@ -1,26 +1,25 @@
-def affiche():
-	"""
-		Affiche le plateau de jeu dans la console de manière lisible
-		Code fourni
-	"""
-	plateau = [[".", ".", "."], [".", ".", "."], [".", ".", "."]]
-	print("\t \t", "  0 1 2")
-	for j in range(len(plateau)):
-		print("\t \t", j, end=" ")
-		for i in range(len(plateau[0]) - 1):
-			print(plateau[j][i], end=" ")
-		print(plateau[j][-1])
+import modules.game_manager as game_manager
 
 def menu_principal():
 	"""
 	Menu principal avec toutes les options possibles pour le jeu
 	"""
-	print("Morpion")
-	print("Bienvenue sur le jeu !")
-	print("Options :")
-	print("1 : Jouer")
-	print("2 : Classement")
-	print("3 : Crédits")
+	print("\033[91m" + r"""
+		*        )   (    (    (        )      )  
+		(  `    ( /(   )\ ) )\ ) )\ )  ( /(   ( /(  
+		)\))(   )\()) (()/((()/((()/(  )\())  )\()) 
+		((_)()\ ((_)\   /(_))/(_))/(_))((_)\  ((_)\  
+		(_()((_)  ((_) (_)) (_)) (_))    ((_)  _((_) 
+		|  \/  | / _ \ | _ \| _ \|_ _|  / _ \ | \| | 
+		| |\/| || (_) ||   /|  _/ | |  | (_) || .` | 
+		|_|  |_| \___/ |_|_\|_|  |___|  \___/ |_|\_| 																													
+	""" + "\033[0m")
+	print("\033[1m" + "\033[94m" + "Bienvenue sur le jeu !" + "\033[0m")
+	print("\033[94m" + "Options :" + "\033[0m")
+	print("\033[95m" + "1 : Jouer" + "\033[0m")
+	print("\033[92m" + "2 : Classement" + "\033[0m")
+	print("\033[93m" + "3 : Crédits" + "\033[0m")
+	# Les codes correspondent aux effets sur le texte (couleur et gras)
 	def selection():
 		choix = input("Votre choix : ")
 		if choix == "1":
@@ -44,5 +43,5 @@ if __name__ == "__main__":
 		Si vous créez un module, et que vous importez ce fichier 
 		dans un autre script, ces procédures ne seront pas exécutées
 	"""
-	affiche() # Test du plateau vide
-	menu_principal()
+	# game_manager.affiche() # Test du plateau vide
+	menu_principal() # Test du menu principal
