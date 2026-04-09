@@ -43,5 +43,12 @@ if __name__ == "__main__":
 		Si vous créez un module, et que vous importez ce fichier 
 		dans un autre script, ces procédures ne seront pas exécutées
 	"""
-	# game_manager.affiche() # Test du plateau vide
-	menu_principal() # Test du menu principal
+	# print(game_manager.affiche()[0]) # Test du plateau vide ([0] car la fonction affiche() retourne une str et une list, on veut juste la str)
+	# menu_principal() # Test du menu principal
+	# print(game_manager.point_checker("A1")) # Test d'un point valide
+	# print(game_manager.point_checker("E4")) # Test d'un point invalide
+
+	print(game_manager.point_setter("A1", "X")) # Test de placement d'un point valide
+	print(game_manager.point_setter("A1", "O")) # Test de placement d'un point déjà occupé
+	print(game_manager.point_setter("E4", "X")) # Test de placement d'un point invalide
+	print(game_manager.affiche()[0]) # Affichage du plateau après les placements
