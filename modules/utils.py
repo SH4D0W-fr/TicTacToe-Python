@@ -2,6 +2,7 @@ import os
 import dotenv
 from pathlib import Path
 
+# Chemin d'accès des variables d'environnement
 ENV_FILE = Path(__file__).resolve().parent.parent / ".env"
 
 def clear_console():
