@@ -1,15 +1,19 @@
 def affiche():
-	"""
-		Affiche le plateau de jeu dans la console de manière lisible
-		Code fourni
-	"""
-	plateau = [[".", ".", "."], [".", ".", "."], [".", ".", "."]]
-	print("\t \t", "  0 1 2")
-	for j in range(len(plateau)):
-		print("\t \t", j, end=" ")
-		for i in range(len(plateau[0]) - 1):
-			print(plateau[j][i], end=" ")
-		print(plateau[j][-1])
+    """
+    Affiche le plateau avec coordonnées (A B C en haut, 1 2 3 à gauche)
+    Code fourni modifié pour l'adapter à notre disposition
+    """
+    plateau = [[".", ".", "."], [".", ".", "."], [".", ".", "."]]
+
+    # En-tête colonnes
+    print("\t \t  A B C")
+
+    # Affichage du plateau
+    for j in range(len(plateau)):
+        print("\t \t", j + 1, end=" ")
+        for i in range(len(plateau[j])):
+            print(plateau[j][i], end=" ")
+        print()
 
 def game_type_choice():
     """
@@ -26,3 +30,13 @@ def game_type_choice():
     else:
         print("Choix invalide. Veuillez réessayer")
         game_type_choice()
+
+def point_checker(pos:str) -> bool:
+    """
+        Fonction qui permet de vérifier si un point spécifié est valide
+    """
+    valid = [f"{lettre}{chiffre}" for lettre in "ABC" for chiffre in range(1, 4)] # Liste par compréhension
+    for v in valid:
+        if pos == v:
+             return True
+    return False
