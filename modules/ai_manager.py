@@ -1,8 +1,53 @@
 from groq import Groq
+import modules.utils as utils
 
-client = Groq(
-    api_key="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"
-)
+def get_key_from_env():
+    """
+    Récupère la clé API depuis les variables d'environnement
+    """
+    return utils.get_env("GROQ_API_KEY")
+
+
+def save_key_to_env(api_key):
+    """
+    Enregistre la clé API dans les variables d'environnement
+    """
+    utils.set_env("GROQ_API_KEY", api_key)
+
+
+def validate_api_key(api_key):
+    """
+    Valide la clé API en testant la connexion à Groq
+    """
+    try:
+        test_client = Groq(api_key=api_key)
+        test_client.models.list()
+        return True
+    except Exception:
+        return False
+
+
+def get_key():
+    """
+    Récupère et valide la clé API Groq
+    """
+    api_key = get_key_from_env()
+
+    while True:
+        if not api_key:
+            print("\033[91m" + "Aucune clé API enregistrée" + "\033[0m")
+            api_key = input("Clé API : ").strip()
+
+        if validate_api_key(api_key):
+            save_key_to_env(api_key)
+            return api_key
+
+        print("\033[91m" + "Clé API invalide" + "\033[0m")
+        api_key = None
+
+
+api_key = get_key()
+client = Groq(api_key=api_key)
 
 def ai_play(tableau):
     prompt = f"""
