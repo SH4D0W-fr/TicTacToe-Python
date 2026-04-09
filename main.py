@@ -1,4 +1,6 @@
+import modules.utils as utils
 import modules.game_manager as game_manager
+import modules.ai_manager as ai_manager
 
 def menu_principal():
 	"""
@@ -48,7 +50,14 @@ if __name__ == "__main__":
 	# print(game_manager.point_checker("A1")) # Test d'un point valide
 	# print(game_manager.point_checker("E4")) # Test d'un point invalide
 
+	utils.clear_console()
 	print(game_manager.point_setter("A1", "X")) # Test de placement d'un point valide
 	print(game_manager.point_setter("A1", "O")) # Test de placement d'un point déjà occupé
 	print(game_manager.point_setter("E4", "X")) # Test de placement d'un point invalide
 	print(game_manager.affiche()[0]) # Affichage du plateau après les placements
+	
+	utils.clear_console()
+	choix_ia = ai_manager.ai_play(game_manager.affiche()[1])
+	print(choix_ia) # Test de l'IA pour jouer un coup
+	print(game_manager.point_setter(choix_ia, "O")) # Placement du coup de l'IA
+	print(game_manager.affiche()[0]) # Affichage du plateau après le coup de l'IA
