@@ -20,16 +20,19 @@ def affiche():
 
 def game_type_choice():
     """
-        Fonction qui permet de choisir le mode de jeu (IA ou Algorithmique)
+        Fonction qui permet de choisir le mode de jeu (IA, Algorithmique ou JcJ)
     """
-    print("Souhaitez vous jouer contre un algorithme ou une IA (clé API Groq requise ❗)")
-    choix = input("Votre choix (algo / ia) : ")
+    print("Souhaitez vous jouer contre un joueur, un algorithme ou une IA (clé API Groq requise ❗)")
+    choix = input("Votre choix (joueur/ algo / ia) : ")
     if choix.lower() == "algo":
         a = 0
         # Appel de la fonction pour lancer le jeu en mode algo
     elif choix.lower() == 'ia':
         a = 0
         # Appel de la fonction pour lancer le jeu en mode IA
+    elif choix.lower() == 'joueur':
+        a = 0
+        # Appel de la fonction pour lancer le jeu en mode JcJ
     else:
         print("Choix invalide. Veuillez réessayer")
         game_type_choice()
