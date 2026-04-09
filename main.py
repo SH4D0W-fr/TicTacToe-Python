@@ -61,3 +61,6 @@ if __name__ == "__main__":
 	print(choix_ia) # Test de l'IA pour jouer un coup
 	print(game_manager.point_setter(choix_ia, "O")) # Placement du coup de l'IA
 	print(game_manager.affiche()[0]) # Affichage du plateau après le coup de l'IA
+	print(game_manager.win_condition(game_manager.affiche()[1], "X"))
+	test_plateau = [["X", ".", "."], [".", "X", "."], [".", ".", "X"]]
+	print(game_manager.win_condition(test_plateau, "X"))
