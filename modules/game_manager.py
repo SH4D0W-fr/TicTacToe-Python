@@ -56,3 +56,24 @@ def point_setter(pos:str, symbol:str) -> bool:
             plateau[int(pos[1]) - 1][ord(pos[0]) - ord("A")] = symbol
             return True
     return False
+
+def win_condition(tableau:list, symbole:str) -> bool:
+    """
+        Fonction qui vérifie si un symbole a gagné
+    """
+    if symbole == ".":
+        return False
+    for ligne in tableau:
+        if ligne[0] == ligne[1] == ligne[2] == symbole:
+            return True
+        elif tableau[0][0] == tableau[1][0] == tableau[2][0] == symbole:
+            return True
+        elif tableau[1][0] == tableau[1][1] == tableau[1][2] == symbole:
+            return True
+        elif tableau[2][0] == tableau[2][1] == tableau[2][2] == symbole:
+            return True
+        elif tableau[0][0] == tableau[1][1] == tableau[2][2] == symbole:
+            return True
+        elif tableau[0][2] == tableau[1][1] == tableau[2][0] == symbole:
+            return True
+    return False
