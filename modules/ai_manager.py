@@ -46,8 +46,18 @@ def get_key():
         api_key = None
 
 
-api_key = get_key()
-client = Groq(api_key=api_key)
+# Initialiser la clé et le client seulement quand nécessaire
+_client = None
+
+def get_client():
+    """
+    Obtient le client Groq, en initialisant la clé si nécessaire
+    """
+    global _client
+    if _client is None:
+        api_key = get_key()
+        _client = Groq(api_key=api_key)
+    return _client
 
 def ai_play(tableau):
     prompt = f"""
@@ -67,6 +77,7 @@ def ai_play(tableau):
         - Ne mets RIEN d'autre dans ta réponse.
     """
 
+    client = get_client()
     response = client.chat.completions.create(
         model="llama-3.1-8b-instant",
         messages=[
