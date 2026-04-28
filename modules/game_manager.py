@@ -42,13 +42,6 @@ def plateau_en_liste(tableau: list) -> list[str]:
     return [case for ligne in tableau for case in ligne]
 
 
-def liste_en_plateau(cases: list[str]) -> list[list[str]]:
-    """
-    Fonction qui transforme une liste d'une seule ligne en plateau 3x3
-    """
-    return [cases[0:3], cases[3:6], cases[6:9]]
-
-
 def cases_libres(plateau_ligne: list[str]) -> list[int]:
     """
     Fonction qui récupère les indices des cases libres
