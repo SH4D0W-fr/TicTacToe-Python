@@ -61,7 +61,7 @@ def get_client():
 
 def ai_play(tableau):
     prompt = f"""
-        Tu joues au morpion (tic-tac-toe).
+        Tu es un world class expert qui joue au morpion (tic-tac-toe) avec le symbole O.
 
         Voici le plateau actuel :
         {tableau}
@@ -79,7 +79,7 @@ def ai_play(tableau):
 
     client = get_client()
     response = client.chat.completions.create(
-        model="llama-3.1-8b-instant",
+        model="llama-3.3-70b-versatile",
         messages=[
             {"role": "user", "content": prompt}
         ],

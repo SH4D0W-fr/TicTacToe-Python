@@ -1,3 +1,6 @@
+import modules.utils as utils
+import modules.ai_manager as ai_manager
+
 # Init variables globales
 IA = "O"
 HUMAIN = "X"
@@ -141,21 +144,22 @@ def jouer_mode_algo(pseudo_joueur):
     tour_humain = True
 
     while True:
+        utils.clear_console()
         print(affiche()[0])
 
         etat_actuel = plateau_en_liste(plateau)
 
         if verifier_gagnant(etat_actuel, HUMAIN):
             print("Vous avez gagné !")
-            return ("victoire", "algo", pseudo_joueur)
+            return ("victoire", pseudo_joueur, "Algorithme")
 
         if verifier_gagnant(etat_actuel, IA):
             print("L'algorithme a gagné !")
-            return ("défaite", "algo", pseudo_joueur)
+            return ("défaite", "Algorithme", pseudo_joueur)
 
         if not cases_libres(etat_actuel):
             print("Match nul !")
-            return ("nul", "algo", pseudo_joueur)
+            return ("nul", pseudo_joueur, "Algorithme")
 
         if tour_humain:
             coup = input("Votre coup : ").strip().upper()
@@ -171,6 +175,52 @@ def jouer_mode_algo(pseudo_joueur):
 
             point_setter(indice_vers_pos(coup_ia), IA)
             print(f"L'algorithme joue {indice_vers_pos(coup_ia)}")
+            tour_humain = True
+
+def jouer_mode_ia(pseudo_joueur):
+    """
+    Fonction qui lance une partie contre l'IA
+    Retourne un tuple (resultat, mode, pseudo_joueur) où resultat est 'victoire', 'défaite' ou 'nul'
+    """
+    reinitialiser_plateau()
+    tour_humain = True
+
+    while True:
+        utils.clear_console()
+        print(affiche()[0])
+
+        etat_actuel = plateau_en_liste(plateau)
+
+        if verifier_gagnant(etat_actuel, HUMAIN):
+            print("Vous avez gagné !")
+            return ("victoire", pseudo_joueur, "IA")
+
+        if verifier_gagnant(etat_actuel, IA):
+            print("L'IA a gagné !")
+            return ("défaite", "IA", pseudo_joueur)
+
+        if not cases_libres(etat_actuel):
+            print("Match nul !")
+            return ("nul", pseudo_joueur, "IA")
+
+        if tour_humain:
+            coup = input("Votre coup : ").strip().upper()
+            if point_setter(coup, HUMAIN):
+                tour_humain = False
+            else:
+                print("Coup invalide. Réessayez.")
+        else:
+            coup_ia = ai_manager.ai_play(etat_actuel)
+            if coup_ia == -1:
+                print("Match nul !")
+                return ("nul", pseudo_joueur, "IA")
+
+            coup_ia = str(coup_ia).strip().upper()
+            if not point_setter(coup_ia, IA):
+                coup_ia = indice_vers_pos(meilleur_coup(etat_actuel))
+                point_setter(coup_ia, IA)
+
+            print(f"L'IA joue {coup_ia}")
             tour_humain = True
 
 def jouer_mode_joueur():
@@ -192,21 +242,22 @@ def jouer_mode_joueur():
     tour_joueur1 = True
     
     while True:
+        utils.clear_console()
         print(affiche()[0])
         
         etat_actuel = plateau_en_liste(plateau)
         
         if verifier_gagnant(etat_actuel, HUMAIN):
             print(f"{pseudo_joueur1} (X) a gagné !")
-            return ("victoire", "joueur", pseudo_joueur1)
+            return ("victoire", pseudo_joueur1, pseudo_joueur2)
         
         if verifier_gagnant(etat_actuel, IA):
             print(f"{pseudo_joueur2} (O) a gagné !")
-            return ("victoire", "joueur", pseudo_joueur2)
+            return ("victoire", pseudo_joueur2, pseudo_joueur1)
         
         if not cases_libres(etat_actuel):
             print("Match nul !")
-            return ("nul", "joueur", pseudo_joueur1)
+            return ("nul", pseudo_joueur1, pseudo_joueur2)
         
         if tour_joueur1:
             joueur_actuel = pseudo_joueur1
@@ -239,8 +290,10 @@ def game_type_choice():
                 pseudo_joueur = "Joueur"
             return jouer_mode_algo(pseudo_joueur)
         elif choix == 'ia':
-            print("Le mode IA n'est pas encore branché.")
-            return None
+            pseudo_joueur = input("\033[95m" + "Entrez votre pseudo : " + "\033[0m").strip()
+            if not pseudo_joueur:
+                pseudo_joueur = "Joueur"
+            return jouer_mode_ia(pseudo_joueur)
         elif choix == 'joueur':
             return jouer_mode_joueur()
         else:
@@ -266,12 +319,3 @@ def point_setter(pos:str, symbol:str) -> bool:
             plateau[int(pos[1]) - 1][ord(pos[0]) - ord("A")] = symbol
             return True
     return False
-
-def win_condition(tableau:list, symbole:str) -> bool:
-    """
-        Fonction qui vérifie si un symbole a gagné
-    """
-    if symbole == VIDE:
-        return False
-
-    return verifier_gagnant(plateau_en_liste(tableau), symbole)

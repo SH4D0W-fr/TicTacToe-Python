@@ -10,11 +10,15 @@ def lancer_partie():
 	"""
 	resultat = game_manager.game_type_choice()
 	if resultat:
-		resultat_partie, mode, pseudo_joueur = resultat
+		resultat_partie, gagnant, perdant = resultat
 		# Pour le mode joueur, on doit enregistrer les stats pour les deux joueurs
-		# Mais on ne reçoit que le pseudo du gagnant (ou joueur1 en cas de nul)
-		save_manager.ajouter_ou_mettre_a_jour(pseudo_joueur, resultat_partie, mode)
-		print(f"\n\033[92m" + f"✓ Stats enregistrées pour {pseudo_joueur}" + "\033[0m\n")
+		if resultat_partie == "victoire":
+			save_manager.ajouter_ou_mettre_a_jour(gagnant, "victoire")
+			save_manager.ajouter_ou_mettre_a_jour(perdant, "défaite")
+		elif resultat_partie == "nul":
+			save_manager.ajouter_ou_mettre_a_jour(gagnant, "nul")
+			save_manager.ajouter_ou_mettre_a_jour(perdant, "nul")
+		print(f"\n\033[92m" + f"✓ Stats enregistrées pour {gagnant} et {perdant}" + "\033[0m\n")
 		input("Appuyez sur Entrée pour continuer...")
 	menu_principal()
 
@@ -65,4 +69,25 @@ if __name__ == "__main__":
 		Si vous créez un module, et que vous importez ce fichier 
 		dans un autre script, ces procédures ne seront pas exécutées
 	"""
+	
+	# print(game_manager.affiche()[0]) # Test du plateau vide ([0] car la fonction affiche() retourne une str et une list, on veut juste la str)
+	# menu_principal() # Test du menu principal
+	# print(game_manager.point_checker("A1")) # Test d'un point valide
+	# print(game_manager.point_checker("E4")) # Test d'un point invalide
+
+	# utils.clear_console()
+	# print(game_manager.point_setter("A1", "X")) # Test de placement d'un point valide
+	# print(game_manager.point_setter("A1", "O")) # Test de placement d'un point déjà occupé
+	# print(game_manager.point_setter("E4", "X")) # Test de placement d'un point invalide
+	# print(game_manager.affiche()[0]) # Affichage du plateau après les placements
+	
+	# utils.clear_console()
+	# choix_ia = ai_manager.ai_play(game_manager.affiche()[1])
+	# print(choix_ia) # Test de l'IA pour jouer un coup
+	# print(game_manager.point_setter(choix_ia, "O")) # Placement du coup de l'IA
+	# print(game_manager.affiche()[0]) # Affichage du plateau après le coup de l'IA
+	# print(game_manager.win_condition(game_manager.affiche()[1], "X")) # Fonction changée
+	# test_plateau = [["X", ".", "."], [".", "X", "."], [".", ".", "X"]]
+	# print(game_manager.win_condition(test_plateau, "X")) # Fonction changée
+
 	menu_principal()
