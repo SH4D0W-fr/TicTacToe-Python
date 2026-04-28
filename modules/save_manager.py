@@ -12,14 +12,13 @@ def initialiser_csv():
     if not DATA_FILE.exists():
         with open(DATA_FILE, "w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f, delimiter=";")
-            writer.writerow(["pseudo", "victoires_algo", "défaites_algo", "nuls_algo", "victoires_ia", "défaites_ia", "nuls_ia"])
+            writer.writerow(["pseudo", "victoires", "défaites", "nuls"])
 
 
-def ajouter_ou_mettre_a_jour(pseudo: str, resultat: str, mode: str):
+def ajouter_ou_mettre_a_jour(pseudo: str, resultat: str):
     """
     Ajoute ou met à jour les stats d'un joueur
     resultat: "victoire", "défaite" ou "nul"
-    mode: "algo" ou "ia"
     """
     initialiser_csv()
     
@@ -32,20 +31,15 @@ def ajouter_ou_mettre_a_jour(pseudo: str, resultat: str, mode: str):
             joueur_trouve = True
             # Mettre à jour les stats - convertir le singulier en pluriel
             resultat_pluriel = resultat + "s" if resultat != "nul" else "nuls"
-            cle = f"{resultat_pluriel}_{mode}"
-            joueur[cle] = str(int(joueur.get(cle, 0)) + 1)
+            joueur[resultat_pluriel] = str(int(joueur.get(resultat_pluriel, 0)) + 1)
             break
     
     # Si pas trouvé, créer un nouveau joueur
     if not joueur_trouve:
-        nouveau_joueur = {"pseudo": pseudo}
-        # Initialiser toutes les colonnes
-        for resultat_type in ["victoire", "défaite", "nul"]:
-            for mode_type in ["algo", "ia"]:
-                # Convertir le singulier en pluriel pour la clé
-                resultat_pluriel = resultat_type + "s" if resultat_type != "nul" else "nuls"
-                cle = f"{resultat_pluriel}_{mode_type}"
-                nouveau_joueur[cle] = "1" if resultat_type == resultat and mode_type == mode else "0"
+        nouveau_joueur = {"pseudo": pseudo, "victoires": "0", "défaites": "0", "nuls": "0"}
+        # Incrémenter la stat correspondante
+        resultat_pluriel = resultat + "s" if resultat != "nul" else "nuls"
+        nouveau_joueur[resultat_pluriel] = "1"
         donnees.append(nouveau_joueur)
     
     # Réécrire le fichier
@@ -68,7 +62,7 @@ def lire_tous_joueurs() -> list[dict]:
     return donnees
 
 
-def obtenir_stats_joueur(pseudo: str) -> dict:
+def obtenir_stats_joueur(pseudo: str) -> dict | None:
     """
     Retourne les stats d'un joueur spécifique
     """
@@ -98,40 +92,42 @@ def ecrire_donnees(donnees: list[dict]):
         writer.writeheader()
         writer.writerows(donnees)
 
-def trier_classement(joueurs: list[dict], mode: str = None) -> list[dict]:
+def trier_classement(joueurs: list[dict]) -> list[dict]:
     """
-    Trie les joueurs par nombre total de victoires en utilisant un bubble sort inversé
-    mode: "algo", "ia" ou None (tous les modes)
+    Trie les joueurs par victoires, puis nuls, puis défaites.
     """
-    # Calculer le total des victoires pour chaque joueur
-    for joueur in joueurs:
-        if mode == "algo":
-            victoires = int(joueur.get("victoires_algo", 0))
-        elif mode == "ia":
-            victoires = int(joueur.get("victoires_ia", 0))
-        else:
-            victoires = int(joueur.get("victoires_algo", 0)) + int(joueur.get("victoires_ia", 0))
-        
-        joueur["total_victoires"] = victoires
-    
-    # Bubble sort inversé (ordre descendant)
+    # Bubble sort inversé avec un classement multi-critères
     n = len(joueurs)
     for i in range(n):
         for j in range(0, n - i - 1):
-            if joueurs[j]["total_victoires"] < joueurs[j + 1]["total_victoires"]:
+            # On construit un score comparable pour chaque joueur.
+            # Plus il y a de victoires, mieux c'est.
+            # En cas d'égalité, on départage avec les nuls, puis on pénalise les défaites.
+            score_gauche = (
+                int(joueurs[j].get("victoires", 0)),
+                int(joueurs[j].get("nuls", 0)),
+                -int(joueurs[j].get("défaites", 0)),
+            )
+            score_droite = (
+                int(joueurs[j + 1].get("victoires", 0)),
+                int(joueurs[j + 1].get("nuls", 0)),
+                -int(joueurs[j + 1].get("défaites", 0)),
+            )
+
+            # Si le joueur de gauche est moins bien classé, on échange les deux entrées.
+            if score_gauche < score_droite:
                 # Échanger les éléments
                 joueurs[j], joueurs[j + 1] = joueurs[j + 1], joueurs[j]
     
     return joueurs
 
 
-def obtenir_classement(mode: str = None) -> list[dict]:
+def obtenir_classement() -> list[dict]:
     """
-    Retourne les joueurs triés par nombre total de victoires en utilisant un bubble sort inversé
-    mode: "algo", "ia" ou None (tous les modes)
+    Retourne la liste des joueurs triés selon la hiérarchie victoires, nuls, défaites.
     """
     joueurs = lire_tous_joueurs()
     
-    joueurs_tries = trier_classement(joueurs, mode)
+    joueurs_tries = trier_classement(joueurs)
     
     return joueurs_tries
